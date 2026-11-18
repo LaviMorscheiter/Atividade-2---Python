@@ -12,12 +12,12 @@ class ClientePost(BaseModel):
     sobreNome: str
     
 class ClientePut(BaseModel):
-    id: str = Field(alias="\_id")
+    id: str = Field(alias="_id")
     nome: Optional[str] = None
     sobreNome: Optional[str] = None
     
 class ClienteDelete(BaseModel):
-    id: str = Field(alias="\_id")
+    id: str = Field(alias="_id")
     
 @app.post("/clientes", status_code=status.HTTP_200_OK)
 def cadastrar_cliente(cliente: ClientePost):
