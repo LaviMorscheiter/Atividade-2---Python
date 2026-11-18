@@ -1,6 +1,6 @@
 from fastapi import FastAPI, Response, status
 from pydantic import BaseModel, Field
-from typing import List, Optional
+from typing import Optional
 import uuid
 
 app = FastAPI(title="Atividade 2 - API RESTful de Clientes", description="API RESTful para gerenciamento de clientes", version="1.0.0")
@@ -31,18 +31,18 @@ def cadastrar_cliente(cliente: ClientePost):
 
 @app.put("/clientes")
 def alterar_cliente(cliente: ClientePut):
-    if cliente._id in banco_clientes:
+    if cliente.id in banco_clientes:
         if cliente.nome is not None:
-            banco_clientes[cliente._id]["nome"] = cliente.nome
+            banco_clientes[cliente.id]["nome"] = cliente.nome
         if cliente.sobreNome is not None:
-            banco_clientes[cliente._id]["sobreNome"] = cliente.sobreNome
-        return banco_clientes[cliente._id]
+            banco_clientes[cliente.id]["sobreNome"] = cliente.sobreNome
+        return banco_clientes[cliente.id]
     return Response(content= '{"erro":"Cliente não encontrado"}', status_code=status.HTTP_404_NOT_FOUND)
 
 @app.delete("/clientes", status_code=status.HTTP_200_OK)
 def deletar_cliente(cliente: ClienteDelete):
-    if cliente._id in banco_clientes:
-        del banco_clientes[cliente._id]
+    if cliente.id in banco_clientes:
+        del banco_clientes[cliente.id]
         return Response(status_code=status.HTTP_200_OK)
     return Response(content= '{"erro":"Cliente não encontrado"}', status_code=status.HTTP_404_NOT_FOUND)
 
