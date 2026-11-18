@@ -1,5 +1,5 @@
 from fastapi import FastAPI, Response, status
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from typing import List, Optional
 import uuid
 
@@ -9,15 +9,15 @@ banco_clientes = {}
 
 class ClientePost(BaseModel):
     nome: str
-    sobrenome: str
+    sobreNome: str
     
 class ClientePut(BaseModel):
-    _id: str
+    id: str = Field(alias="\_id")
     nome: Optional[str] = None
-    sobrenome: Optional[str] = None
+    sobreNome: Optional[str] = None
     
 class ClienteDelete(BaseModel):
-    _id: str
+    id: str = Field(alias="\_id")
     
 @app.post("/clientes", status_code=status.HTTP_200_OK)
 def cadastrar_cliente(cliente: ClientePost):
@@ -25,7 +25,7 @@ def cadastrar_cliente(cliente: ClientePost):
     banco_clientes[novo_id]= {
         "_id": novo_id,
         "nome": cliente.nome,
-        "sobrenome": cliente.sobrenome
+        "sobreNome": cliente.sobreNome
     }
     return Response(status_code=status.HTTP_200_OK)
 
@@ -34,8 +34,8 @@ def alterar_cliente(cliente: ClientePut):
     if cliente._id in banco_clientes:
         if cliente.nome is not None:
             banco_clientes[cliente._id]["nome"] = cliente.nome
-        if cliente.sobrenome is not None:
-            banco_clientes[cliente._id]["sobrenome"] = cliente.sobrenome
+        if cliente.sobreNome is not None:
+            banco_clientes[cliente._id]["sobreNome"] = cliente.sobreNome
         return banco_clientes[cliente._id]
     return Response(content= '{"erro":"Cliente não encontrado"}', status_code=status.HTTP_404_NOT_FOUND)
 
